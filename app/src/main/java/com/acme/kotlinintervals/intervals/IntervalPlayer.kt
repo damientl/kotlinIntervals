@@ -14,6 +14,7 @@ import kotlin.time.ExperimentalTime
 
 class IntervalPlayer constructor (private val intervalReader: IntervalReader, private val audioPlayer: AudioPlayer){
 
+    private val S_TO_MIN = 60L
     private val SEC_TO_MS = 1000L
 
     private lateinit var intervals: List<AudioInterval>
@@ -28,6 +29,7 @@ class IntervalPlayer constructor (private val intervalReader: IntervalReader, pr
 
         playChain( 0)
 
+        Log.i("playTAG", "total delay:${delay / S_TO_MIN}min")
         SystemClock.sleep(delay)
     }
 
