@@ -37,6 +37,15 @@ class SecondFragment : Fragment() {
         binding.bStop.setOnClickListener{
             programSelectedListener!!.stopFore()
         }
+        val screenToggler = listener as OnScreenToggle
+
+        binding.bOn.setOnClickListener{
+            screenToggler.setScreen(true)
+        }
+        binding.bOff.setOnClickListener{
+            screenToggler.setScreen(false)
+        }
+
     }
 
     override fun onCreateView(
@@ -67,5 +76,9 @@ class SecondFragment : Fragment() {
     interface OnProgramSelectedForeListener {
         fun playForeProgramSelected(program: Int)
         fun stopFore()
+    }
+
+    interface OnScreenToggle {
+        fun setScreen(on: Boolean)
     }
 }

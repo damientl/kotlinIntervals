@@ -60,7 +60,7 @@ class FirstFragment : Fragment() {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 
-        setProgramSelectedListener(activity as OnProgramSelectedListener)
+        // setProgramSelectedListener(activity as OnProgramSelectedListener)
     }
 
     override fun onDestroyView() {

@@ -15,30 +15,19 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import com.acme.kotlinintervals.databinding.ActivityMainBinding
 import com.acme.kotlinintervals.service.ForePlayerService
 import com.acme.kotlinintervals.service.PlayerService
 
-class MainActivity : AppCompatActivity(), FirstFragment.OnProgramSelectedListener,
-    SecondFragment.OnProgramSelectedForeListener{
+class MainActivity : AppCompatActivity(),
+    SecondFragment.OnProgramSelectedForeListener, SecondFragment.OnScreenToggle {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var mService: PlayerService
     private lateinit var foreService: ForePlayerService
 
-    /** Defines callbacks for service binding, passed to bindService()  */
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // We've bound to service, cast the IBinder and get service instance
-            val binder = service as PlayerService.LocalBinder
-            mService = binder.getService()
-            mService.setup()
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {}
-    }
 
     private val foreConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -51,11 +40,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.OnProgramSelectedListene
         override fun onServiceDisconnected(arg0: ComponentName) {}
     }
 
-    override fun onProgramSelected(item: Int) {
-        Log.i("playTAG", "selected $item")
-        mService.playProgram(item)
-    }
-
     override fun stopFore() {
         Log.i("playTAG", "stop fore")
         foreService.stopForeground(true)
@@ -63,6 +47,15 @@ class MainActivity : AppCompatActivity(), FirstFragment.OnProgramSelectedListene
 
     override fun playForeProgramSelected(program: Int) {
         foreService.playProgram(program)
+    }
+
+    override fun setScreen(on: Boolean) {
+        if(on) {
+            getWindow(). addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            getWindow(). clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,25 +70,16 @@ class MainActivity : AppCompatActivity(), FirstFragment.OnProgramSelectedListene
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        // Bind to LocalService
-        Intent(this, PlayerService::class.java).also { intent ->
-            bindService(intent, connection, Context.BIND_AUTO_CREATE)
-        }
-
         //start foreground service
         Intent(this, ForePlayerService::class.java).also { intent ->
             Log.i("playTAG", "staart fore")
-
-
             this.applicationContext.startForegroundService(intent)
         }
-        //TODO:  stopForeground()
 
         // also bind to foreground service
         Intent(this, ForePlayerService::class.java).also { intent ->
             bindService(intent, foreConnection, Context.BIND_AUTO_CREATE)
         }
-
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
