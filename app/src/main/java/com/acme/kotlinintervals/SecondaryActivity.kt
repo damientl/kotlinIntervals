@@ -8,6 +8,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+
+class SecondaryActivity
+
+/*
 import com.acme.kotlinintervals.service.PlayerService
 
 class SecondaryActivity : AppCompatActivity(), FirstFragment.OnProgramSelectedListener{
@@ -47,3 +51,5 @@ class SecondaryActivity : AppCompatActivity(), FirstFragment.OnProgramSelectedLi
         }
     }
 }
+
+ */

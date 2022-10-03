@@ -7,8 +7,8 @@ import android.os.IBinder
 import android.util.Log
 import com.acme.kotlinintervals.MainActivity
 import com.acme.kotlinintervals.R
-import com.acme.kotlinintervals.intervals.Interactor
-import kotlin.concurrent.thread
+import com.acme.kotlinintervals.interactor.IntervalAssets
+import com.acme.kotlinintervals.interactor.PlayerFactory
 
 class ForePlayerService: Service () {
 
@@ -27,32 +27,18 @@ class ForePlayerService: Service () {
         return binder
     }
 
-    private var interactor: Interactor? = null
+    private lateinit var playerFactory: PlayerFactory
 
-    fun setup() {
+    private fun setup() {
         Log.i("playTAG", "setup fore")
-        interactor = Interactor(this.resources, this.applicationContext)
-    }
-
-    private fun startPlayer(programResource: Int) {
-        Log.i("playTAG", "startPlayer")
-
-            interactor!!.play(programResource)
-
+        playerFactory = PlayerFactory(this.resources, this.applicationContext)
     }
 
     fun playProgram(program: Int) {
-
         Log.i("playTAG", "play fore")
-
-        val progResources = mapOf(
-            10 to R.raw.prog10s,
-            5 to R.raw.prog5s
-        )
-        startPlayer(progResources[program]!!)
-
+        val programResource = IntervalAssets.PROGRAM_RESOURCES[program] ?: IntervalAssets.DEFAULT_PROGRAM
+        playerFactory.getPlayer().play(programResource)
     }
-
 
     // for foreground service
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

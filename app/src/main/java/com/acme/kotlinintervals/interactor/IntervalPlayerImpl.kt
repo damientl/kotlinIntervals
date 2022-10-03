@@ -1,30 +1,23 @@
-package com.acme.kotlinintervals.intervals
+package com.acme.kotlinintervals.interactor
 
 import android.os.SystemClock
-import android.os.SystemClock.elapsedRealtime
 import android.util.Log
-import com.acme.kotlinintervals.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import com.acme.kotlinintervals.audio.AudioPlayer
 import java.util.*
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 
-class IntervalPlayer constructor (private val intervalReader: IntervalReader, private val audioPlayer: AudioPlayer){
+class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader,
+                                      private val audioPlayer: AudioPlayer) : IntervalPlayer{
+
+    // TODO: make interval Reader and audio player interfaces, to make this component more stable
 
     private val S_TO_MIN = 60L
     private val SEC_TO_MS = 1000L
 
     private lateinit var intervals: List<AudioInterval>
 
-    fun playIntervals (program: Int) {
-        play(program)
-    }
-
-    private fun play(program: Int) {
-        intervals = intervalReader.readIntervals(program)
+    override fun play(programResource: Int) {
+        intervals = intervalReader.readIntervals(programResource)
         var delay = intervals.map { it.duration }.sum()
 
         playChain( 0)

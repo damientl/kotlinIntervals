@@ -20,23 +20,23 @@ class SecondFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private var programSelectedListener: OnProgramSelectedForeListener? = null
+    private var programSelectedListener: OnProgramSelectedListener? = null
 
-
-    fun setProgramSelectedListener(listener: OnProgramSelectedForeListener) {
-        this.programSelectedListener = listener
+    fun setProgramSelectedListener(listener: OnProgramSelectedListener) {
+        programSelectedListener = listener
         Log.i("playTAG", "listen fore")
 
         // link buttons
         binding.b10sfore.setOnClickListener{
-            programSelectedListener!!.playForeProgramSelected(10)
+            listener.playProgramSelected(10)
         }
         binding.b5sfore.setOnClickListener{
-            programSelectedListener!!.playForeProgramSelected(5)
+            listener.playProgramSelected(5)
         }
         binding.bStop.setOnClickListener{
-            programSelectedListener!!.stopFore()
+            listener.stopFore()
         }
+
         val screenToggler = listener as OnScreenToggle
 
         binding.bOn.setOnClickListener{
@@ -65,7 +65,7 @@ class SecondFragment : Fragment() {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
-        setProgramSelectedListener(activity as OnProgramSelectedForeListener)
+        setProgramSelectedListener(activity as OnProgramSelectedListener)
     }
 
     override fun onDestroyView() {
@@ -73,8 +73,8 @@ class SecondFragment : Fragment() {
         _binding = null
     }
 
-    interface OnProgramSelectedForeListener {
-        fun playForeProgramSelected(program: Int)
+    interface OnProgramSelectedListener {
+        fun playProgramSelected(program: Int)
         fun stopFore()
     }
 

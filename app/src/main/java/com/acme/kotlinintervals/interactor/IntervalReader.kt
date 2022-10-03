@@ -1,10 +1,10 @@
-package com.acme.kotlinintervals.intervals
+package com.acme.kotlinintervals.interactor
 
 import android.content.res.Resources
 
 class IntervalReader constructor (private val resources: Resources){
-    fun readIntervals(program: Int): List<AudioInterval> {
-        return resources.openRawResource(program).reader().readLines().map{ mapToInterval(it) }
+    fun readIntervals(programResource: Int): List<AudioInterval> {
+        return resources.openRawResource(programResource).reader().readLines().map{ mapToInterval(it) }
     }
 
     private fun mapToInterval(line: String): AudioInterval {

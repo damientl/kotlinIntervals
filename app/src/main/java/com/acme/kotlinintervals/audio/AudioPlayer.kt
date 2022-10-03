@@ -1,4 +1,4 @@
-package com.acme.kotlinintervals.intervals
+package com.acme.kotlinintervals.audio
 
 import android.content.Context
 import android.media.MediaPlayer

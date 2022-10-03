@@ -18,10 +18,9 @@ import android.view.MenuItem
 import android.view.WindowManager
 import com.acme.kotlinintervals.databinding.ActivityMainBinding
 import com.acme.kotlinintervals.service.ForePlayerService
-import com.acme.kotlinintervals.service.PlayerService
 
 class MainActivity : AppCompatActivity(),
-    SecondFragment.OnProgramSelectedForeListener, SecondFragment.OnScreenToggle {
+    SecondFragment.OnProgramSelectedListener, SecondFragment.OnScreenToggle {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -34,7 +33,6 @@ class MainActivity : AppCompatActivity(),
             // We've bound to service, cast the IBinder and get service instance
             val binder = service as ForePlayerService.LocalBinder
             foreService = binder.getService()
-            //setup?
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {}
@@ -45,17 +43,16 @@ class MainActivity : AppCompatActivity(),
         foreService.stopForeground(true)
     }
 
-    override fun playForeProgramSelected(program: Int) {
+    override fun playProgramSelected(program: Int) {
         foreService.playProgram(program)
     }
 
     override fun setScreen(on: Boolean) {
         if(on) {
-            getWindow(). addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            window.addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         } else {
-            getWindow(). clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            window.clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
