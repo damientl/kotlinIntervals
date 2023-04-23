@@ -17,6 +17,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import com.acme.kotlinintervals.databinding.ActivityMainBinding
+import com.acme.kotlinintervals.interactor.IntervalAssets
 import com.acme.kotlinintervals.service.ForePlayerService
 
 class MainActivity : AppCompatActivity(),
@@ -44,7 +45,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun playProgramSelected(program: Int) {
+        window.addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         foreService.playProgram(program)
+    }
+
+    override fun getTotalTime(program: Int) : Int {
+        return foreService.getTotalTime(program)
     }
 
     override fun setScreen(on: Boolean) {

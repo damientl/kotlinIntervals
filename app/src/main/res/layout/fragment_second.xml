@@ -12,77 +12,56 @@
         android:id="@+id/textview_second"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/button_second"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/previous"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_second" />
-
-    <Button
         android:id="@+id/b10sfore"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginEnd="165dp"
-        android:layout_marginBottom="60dp"
-        android:text="10s fore"
-        app:layout_constraintBottom_toTopOf="@+id/bStop"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="232dp"
+        android:text="10s"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/bStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="179dp"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="91dp"
         android:text="Stop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b10sfore" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/b5sfore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="174dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="160dp"
         android:text="5s"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bStop" />
+        app:layout_constraintTop_toBottomOf="@+id/b10sfore" />
 
     <Button
-        android:id="@+id/bOn"
+        android:id="@+id/b8sfore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="18dp"
-        android:text="On"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
-
-    <Button
-        android:id="@+id/bOff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="90dp"
-        android:text="Off"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="64dp"
+        android:text="8s"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="53dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="65dp"
         android:backgroundTint="#8ABA8B"
         android:backgroundTintMode="add"
         android:ems="10"
@@ -92,5 +71,61 @@
         android:textColor="#FFFFFF"
         android:textColorHighlight="#1F857B"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bStop" />
+
+    <Button
+        android:id="@+id/bOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="24dp"
+        android:text="On"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <Button
+        android:id="@+id/bOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="84dp"
+        android:text="Off"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="98dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="99dp"
+        android:text="_________________________________"
+        android:textColor="@android:color/holo_green_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/b5sfore" />
+
+    <TextView
+        android:id="@+id/minutesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="28dp"
+        android:text="minutes:"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="28dp"
+        android:text="_"
+        android:textColor="#E8E5E5"
+        app:layout_constraintStart_toEndOf="@+id/minutesLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

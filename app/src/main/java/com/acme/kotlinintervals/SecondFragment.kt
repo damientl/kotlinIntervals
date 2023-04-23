@@ -29,9 +29,15 @@ class SecondFragment : Fragment() {
         // link buttons
         binding.b10sfore.setOnClickListener{
             listener.playProgramSelected(10)
+            binding.minutes.text = listener.getTotalTime(10).toString()
         }
         binding.b5sfore.setOnClickListener{
             listener.playProgramSelected(5)
+            binding.minutes.text = listener.getTotalTime(5).toString()
+        }
+        binding.b8sfore.setOnClickListener{
+            listener.playProgramSelected(8)
+            binding.minutes.text = listener.getTotalTime(8).toString()
         }
         binding.bStop.setOnClickListener{
             listener.stopFore()
@@ -61,10 +67,6 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-        }
-
         setProgramSelectedListener(activity as OnProgramSelectedListener)
     }
 
@@ -75,6 +77,7 @@ class SecondFragment : Fragment() {
 
     interface OnProgramSelectedListener {
         fun playProgramSelected(program: Int)
+        fun getTotalTime(program: Int) : Int
         fun stopFore()
     }
 

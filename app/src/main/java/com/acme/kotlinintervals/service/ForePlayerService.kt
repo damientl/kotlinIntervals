@@ -40,6 +40,11 @@ class ForePlayerService: Service () {
         playerFactory.getPlayer().play(programResource)
     }
 
+    fun getTotalTime(program:Int): Int{
+        val programResource = IntervalAssets.PROGRAM_RESOURCES[program] ?: IntervalAssets.DEFAULT_PROGRAM
+        return playerFactory.getPlayer().getTotalMinutes(programResource)
+    }
+
     // for foreground service
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 

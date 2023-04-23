@@ -26,6 +26,13 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
         SystemClock.sleep(delay)
     }
 
+    override fun getTotalMinutes(programResource: Int): Int {
+        intervals = intervalReader.readIntervals(programResource)
+        val delay = intervals.map { it.duration }.sum()
+
+        return (delay / S_TO_MIN).toInt();
+    }
+
     private fun playChain(current: Int) {
         if(current >= intervals.size) {
             return

@@ -10,6 +10,7 @@ object IntervalAssets {
 
     val PROGRAM_RESOURCES = mapOf(
         10 to R.raw.prog10s,
+        8 to R.raw.prog8s,
         5 to R.raw.prog5s
     )
     val DEFAULT_PROGRAM = R.raw.prog10s
