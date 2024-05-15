@@ -39,7 +39,7 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
             return
         }
         intervals[current].also {
-            Log.i("playTAG", "wait:$it ")
+            Log.i("playTAG", "wait:$it, current: $current ")
             sleepExactly(it.duration * SEC_TO_MS, it.audio, current)
         }
     }
@@ -54,8 +54,9 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
         }
 
         Timer().schedule(timerTask, delay)
+        Log.i("playTAG", "afterr schedule index $currentIndex ")
     }
     override fun stop(){
-        stop = false;
+        stop = true;
     }
 }

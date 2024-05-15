@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
@@ -30,8 +29,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <service android:name="com.acme.kotlinintervals.service.ForePlayerService"
-            android:foregroundServiceType="mediaPlayback"/>
     </application>
 
 </manifest>

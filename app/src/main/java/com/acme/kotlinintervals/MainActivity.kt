@@ -1,33 +1,22 @@
 package com.acme.kotlinintervals
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import android.view.WindowManager
 import com.acme.kotlinintervals.databinding.ActivityMainBinding
 import com.acme.kotlinintervals.service.ForePlayerService
-import android.provider.Settings
-import android.widget.Toast
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.*
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import com.google.android.material.snackbar.Snackbar
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(),
     SecondFragment.OnProgramSelectedListener, SecondFragment.OnScreenToggle {
@@ -35,27 +24,18 @@ class MainActivity : AppCompatActivity(),
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var foreService: ForePlayerService
-    private lateinit var serviceIntent: Intent
+    private lateinit var foreService:ForePlayerService
 
 
-    private val foreConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // We've bound to service, cast the IBinder and get service instance
-            val binder = service as ForePlayerService.LocalBinder
-            foreService = binder.getService()
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {}
-    }
 
     override fun stopFore() {
         Log.i("playTAG", "stop fore")
         //Toast.makeText(this, "stopFore", Toast.LENGTH_SHORT).show()
-        //foreService.stopService(serviceIntent)
-        foreService.stopForeground(true)
+        foreService.onDestroy()
+
         window.clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setScreenBrightness(0.02f)
+        quit()
     }
     fun quit() {
         finishAndRemoveTask()
@@ -65,7 +45,12 @@ class MainActivity : AppCompatActivity(),
 
         window.addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setScreenBrightness(0.01f)
-        foreService.playProgram(program)
+        thread{
+
+            foreService.playProgram(program)
+        }
+
+
     }
 
     override fun getTotalTime(program: Int) : Int {
@@ -98,34 +83,17 @@ class MainActivity : AppCompatActivity(),
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        //start foreground service
-        // An intent is an abstract description of an operation to be performed
-        serviceIntent = Intent(this, ForePlayerService::class.java).also { intent ->
-            Log.i("playTAG", "staart fore")
-            this.applicationContext.startForegroundService(intent)
-        }
-
-        // also bind to foreground service
-        /*
-        Intent(this, ForePlayerService::class.java).also { intent ->
-            bindService(intent, foreConnection, Context.BIND_AUTO_CREATE)
-        }*/
-        // todo: maybe intent?
-        runBlocking {
-            launch {
-                delay(1000L)
-                bindService(serviceIntent, foreConnection, Context.BIND_AUTO_CREATE)
-            }
-        }
-
-
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
         checkWritePermission()
+
+        foreService = ForePlayerService(resources, applicationContext)
+
     }
+
 
     fun checkWritePermission() {
 
@@ -141,7 +109,7 @@ class MainActivity : AppCompatActivity(),
     // called from activity livecycle
     override fun onStop() {
         super.onStop()
-        foreService.stopForeground(true)
+        foreService.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
