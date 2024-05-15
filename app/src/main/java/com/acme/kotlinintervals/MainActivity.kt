@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -17,8 +18,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import com.acme.kotlinintervals.databinding.ActivityMainBinding
-import com.acme.kotlinintervals.interactor.IntervalAssets
 import com.acme.kotlinintervals.service.ForePlayerService
+import android.provider.Settings
 
 class MainActivity : AppCompatActivity(),
     SecondFragment.OnProgramSelectedListener, SecondFragment.OnScreenToggle {
@@ -42,10 +43,17 @@ class MainActivity : AppCompatActivity(),
     override fun stopFore() {
         Log.i("playTAG", "stop fore")
         foreService.stopForeground(true)
+        window.clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        setScreenBrightness(0.02f)
+        quit()
+    }
+    fun quit() {
+        finishAndRemoveTask()
     }
 
     override fun playProgramSelected(program: Int) {
         window.addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        setScreenBrightness(0.01f)
         foreService.playProgram(program)
     }
 
@@ -53,12 +61,18 @@ class MainActivity : AppCompatActivity(),
         return foreService.getTotalTime(program)
     }
 
-    override fun setScreen(on: Boolean) {
-        if(on) {
-            window.addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    override fun setScreen(bright: Boolean) {
+        if(bright) {
+            setScreenBrightness(0.3f)
         } else {
-            window.clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            setScreenBrightness(0.01f)
         }
+    }
+
+    private fun setScreenBrightness(value: Float) {
+        val layoutpars = window.attributes
+        layoutpars.screenBrightness = value
+        window.attributes = layoutpars
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,6 +102,25 @@ class MainActivity : AppCompatActivity(),
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+
+        checkWritePermission()
+    }
+
+    fun checkWritePermission() {
+
+        if (!Settings.System.canWrite(this)) {
+            Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS).apply {
+                data = Uri.parse("package:$packageName")
+                startActivity(this)
+            }
+        }
+        //Toast.makeText(this, "Permission already granted.", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        foreService.stopForeground(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

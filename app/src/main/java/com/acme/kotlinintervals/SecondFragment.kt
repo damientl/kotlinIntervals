@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import com.acme.kotlinintervals.databinding.FragmentSecondBinding
 
 /**
@@ -45,10 +44,10 @@ class SecondFragment : Fragment() {
 
         val screenToggler = listener as OnScreenToggle
 
-        binding.bOn.setOnClickListener{
+        binding.bBright.setOnClickListener{
             screenToggler.setScreen(true)
         }
-        binding.bOff.setOnClickListener{
+        binding.bDark.setOnClickListener{
             screenToggler.setScreen(false)
         }
 
@@ -82,6 +81,6 @@ class SecondFragment : Fragment() {
     }
 
     interface OnScreenToggle {
-        fun setScreen(on: Boolean)
+        fun setScreen(bright: Boolean)
     }
 }
