@@ -22,6 +22,9 @@ import com.acme.kotlinintervals.databinding.ActivityMainBinding
 import com.acme.kotlinintervals.service.ForePlayerService
 import android.provider.Settings
 import android.widget.Toast
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -108,9 +111,12 @@ class MainActivity : AppCompatActivity(),
             bindService(intent, foreConnection, Context.BIND_AUTO_CREATE)
         }*/
         // todo: maybe intent?
-        Executors.newSingleThreadScheduledExecutor().schedule({
-            bindService(serviceIntent, foreConnection, Context.BIND_AUTO_CREATE)
-        }, 1, TimeUnit.SECONDS)
+        runBlocking {
+            launch {
+                delay(1000L)
+                bindService(serviceIntent, foreConnection, Context.BIND_AUTO_CREATE)
+            }
+        }
 
 
         binding.fab.setOnClickListener { view ->
