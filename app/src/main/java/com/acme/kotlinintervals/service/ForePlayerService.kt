@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import com.acme.kotlinintervals.MainActivity
 import com.acme.kotlinintervals.R
 import com.acme.kotlinintervals.interactor.IntervalAssets
@@ -36,6 +37,7 @@ class ForePlayerService: Service () {
 
     fun playProgram(program: Int) {
         Log.i("playTAG", "play fore")
+        Toast.makeText(this, "playProgram", Toast.LENGTH_SHORT).show()
         val programResource = IntervalAssets.PROGRAM_RESOURCES[program] ?: IntervalAssets.DEFAULT_PROGRAM
         playerFactory.getPlayer().play(programResource)
     }
@@ -85,6 +87,12 @@ class ForePlayerService: Service () {
         setup()
 
         return Service.START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(this, "Destroy", Toast.LENGTH_SHORT).show()
+        playerFactory.getPlayer().stop()
     }
 
 }

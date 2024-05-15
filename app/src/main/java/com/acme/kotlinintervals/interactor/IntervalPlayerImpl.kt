@@ -15,6 +15,7 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
     private val SEC_TO_MS = 1000L
 
     private lateinit var intervals: List<AudioInterval>
+    private var stop = false;
 
     override fun play(programResource: Int) {
         intervals = intervalReader.readIntervals(programResource)
@@ -34,7 +35,7 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
     }
 
     private fun playChain(current: Int) {
-        if(current >= intervals.size) {
+        if(current >= intervals.size || stop) {
             return
         }
         intervals[current].also {
@@ -53,5 +54,8 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
         }
 
         Timer().schedule(timerTask, delay)
+    }
+    override fun stop(){
+        stop = false;
     }
 }

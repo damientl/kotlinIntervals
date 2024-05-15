@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
@@ -20,6 +21,10 @@ import android.view.WindowManager
 import com.acme.kotlinintervals.databinding.ActivityMainBinding
 import com.acme.kotlinintervals.service.ForePlayerService
 import android.provider.Settings
+import android.widget.Toast
+import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(),
     SecondFragment.OnProgramSelectedListener, SecondFragment.OnScreenToggle {
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var foreService: ForePlayerService
+    private lateinit var serviceIntent: Intent
 
 
     private val foreConnection = object : ServiceConnection {
@@ -42,16 +48,18 @@ class MainActivity : AppCompatActivity(),
 
     override fun stopFore() {
         Log.i("playTAG", "stop fore")
+        //Toast.makeText(this, "stopFore", Toast.LENGTH_SHORT).show()
+        //foreService.stopService(serviceIntent)
         foreService.stopForeground(true)
         window.clearFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setScreenBrightness(0.02f)
-        quit()
     }
     fun quit() {
         finishAndRemoveTask()
     }
 
     override fun playProgramSelected(program: Int) {
+
         window.addFlags (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setScreenBrightness(0.01f)
         foreService.playProgram(program)
@@ -88,15 +96,22 @@ class MainActivity : AppCompatActivity(),
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         //start foreground service
-        Intent(this, ForePlayerService::class.java).also { intent ->
+        // An intent is an abstract description of an operation to be performed
+        serviceIntent = Intent(this, ForePlayerService::class.java).also { intent ->
             Log.i("playTAG", "staart fore")
             this.applicationContext.startForegroundService(intent)
         }
 
         // also bind to foreground service
+        /*
         Intent(this, ForePlayerService::class.java).also { intent ->
             bindService(intent, foreConnection, Context.BIND_AUTO_CREATE)
-        }
+        }*/
+        // todo: maybe intent?
+        Executors.newSingleThreadScheduledExecutor().schedule({
+            bindService(serviceIntent, foreConnection, Context.BIND_AUTO_CREATE)
+        }, 1, TimeUnit.SECONDS)
+
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -117,9 +132,9 @@ class MainActivity : AppCompatActivity(),
         //Toast.makeText(this, "Permission already granted.", Toast.LENGTH_SHORT).show()
     }
 
+    // called from activity livecycle
     override fun onStop() {
         super.onStop()
-
         foreService.stopForeground(true)
     }
 

@@ -30,7 +30,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <service android:name="com.acme.kotlinintervals.service.ForePlayerService" />
+        <service android:name="com.acme.kotlinintervals.service.ForePlayerService"
+            android:foregroundServiceType="mediaPlayback"/>
     </application>
 
 </manifest>
