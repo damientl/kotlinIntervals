@@ -3,6 +3,8 @@ package com.acme.kotlinintervals.interactor
 import android.os.SystemClock
 import android.util.Log
 import com.acme.kotlinintervals.audio.AudioPlayer
+import com.example.util.MyScheduler
+import com.example.util.VariableIntervalExecutor
 import java.util.*
 
 
@@ -15,13 +17,18 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
     private val SEC_TO_MS = 1000L
 
     private lateinit var intervals: List<AudioInterval>
-    private var stop = false;
+    private val variableIntervalExecutor = VariableIntervalExecutor(MyScheduler())
 
     override fun play(programResource: Int) {
         intervals = intervalReader.readIntervals(programResource)
         var delay = intervals.map { it.duration }.sum()
 
-        playChain( 0)
+        //playChain( 0)
+
+        variableIntervalExecutor.playIntervals(intervals,
+            {
+                audioPlayer.playAudio(it)
+            })
 
         Log.i("playTAG", "total delay:${delay / S_TO_MIN}min")
         SystemClock.sleep(delay)
@@ -34,29 +41,7 @@ class IntervalPlayerImpl constructor (private val intervalReader: IntervalReader
         return (delay / S_TO_MIN).toInt();
     }
 
-    private fun playChain(current: Int) {
-        if(current >= intervals.size || stop) {
-            return
-        }
-        intervals[current].also {
-            Log.i("playTAG", "wait:$it, current: $current ")
-            sleepExactly(it.duration * SEC_TO_MS, it.audio, current)
-        }
-    }
-
-    private fun sleepExactly(delay: Long, audio: Int, currentIndex: Int) {
-
-        val timerTask = object : TimerTask() {
-            override fun run() {
-                audioPlayer.playAudio(audio)
-                playChain( currentIndex + 1)
-            }
-        }
-
-        Timer().schedule(timerTask, delay)
-        Log.i("playTAG", "afterr schedule index $currentIndex ")
-    }
     override fun stop(){
-        stop = true;
+        variableIntervalExecutor.stop()
     }
 }
